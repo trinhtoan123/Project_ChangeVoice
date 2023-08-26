@@ -40,4 +40,11 @@ namespace Common
         public Sprite soundImgs;
         public AudioClip soundClip ;
     }
+    [System.Serializable]
+    public class SoundEffect
+    {
+        public string soundName;
+        public Sprite soundImgs;
+    }
+
 }

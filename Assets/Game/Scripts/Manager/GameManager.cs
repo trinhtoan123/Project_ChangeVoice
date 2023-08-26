@@ -2,19 +2,17 @@ using Common;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public Dictionary<string, MainSoundInfo> soundInfoDict;
-
-    public List<string>_soundTypeList = new List<string>();
-    public List<string> SoundTypeList => _soundTypeList;
-
+    Dictionary<string, MainSoundInfo> soundInfoDict;
+    Dictionary<string, List<MainSoundInfo>> dataType = new Dictionary<string, List<MainSoundInfo>>();
+    List<string> typeItem = new List<string>();
     private void Awake()
     {
-        Instance= this;
+        Instance = this;
     }
     void Start()
     {
@@ -30,11 +28,32 @@ public class GameManager : MonoBehaviour
     }
     public void AddToListType(string type, MainSoundInfo mainSound)
     {
-        if (!_soundTypeList.Contains(type))
-            _soundTypeList.Add(type);
+        if (!typeItem.Contains(type))
+            typeItem.Add(type);
+
+        if (!dataType.ContainsKey(type))
+        {
+            List<MainSoundInfo> list = new List<MainSoundInfo>();
+            dataType.Add(type, list);
+            dataType[type].Add(mainSound);
+        }
+        else
+        {
+            dataType[type].Add(mainSound);
+        }
+
+    }
+    public int CountItemEffect()
+    {
+        return dataType.Count;
+    }
+    public int CountItemChild(int index)
+    {
+        return dataType[typeItem[index]].Count;
     }
     public MainSoundInfo SoundInfoDict(int index)
     {
-        return soundInfoDict[_soundTypeList[index]];
+        return dataType[typeItem[index]][index];
     }
 }
+   

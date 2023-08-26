@@ -1,43 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Timeline;
-
+using TQT.UI;
 public class SoundEffect : MonoBehaviour
 {
     [SerializeField] Transform posConten;
     [SerializeField] ItemSoundEffect item;
-    [SerializeField] List<ItemSoundEffect> _itemList = new List<ItemSoundEffect>();
-    void Start()
+    List<ItemSoundEffect> _itemList = new List<ItemSoundEffect>();
+    MenuControl menuControl;
+
+    public void Init()
     {
-        
+        menuControl = GetComponent<MenuControl>();
     }
-    private void OnEnable()
+    public void GameStart()
     {
         SpawnItem_SoundEffect();
     }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     void SpawnItem_SoundEffect()
     {
-        int count = GameManager.Instance.SoundTypeList.Count;
-       
+        int count = GameManager.Instance.CountItemEffect();
         for (int i = 0; i < count; i++)
         {
-            //ItemSoundEffect tmpCurrrentItem = Instantiate(item, posConten);
-            //_itemList.Add(tmpCurrrentItem);
-            //Debug.LogError("Item " + GameManager.Instance.SoundInfoDict(i).soundName);
-            //tmpCurrrentItem.OnInit(GameManager.Instance.SoundInfoDict(i));
-            //ItemSoundEffect tmpCurrrentItem = null;
-            //if (i < _itemList.Count)
-            //    tmpCurrrentItem = _itemList[i];
-            //if (tmpCurrrentItem == null)
-            //{
-               
-            //}
+            ItemSoundEffect tmpCurrrentItem = null;
+            if (i < _itemList.Count)
+                tmpCurrrentItem = _itemList[i];
+            if (tmpCurrrentItem == null)
+            {
+                tmpCurrrentItem = Instantiate(item, posConten);
+                _itemList.Add(tmpCurrrentItem);
+                tmpCurrrentItem.OnInit(GameManager.Instance.SoundInfoDict(i),i,this);
+            }
         }
+    }
+    public void OnClickButton()
+    {
+        
     }
 }

@@ -1,18 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TQT.UI;
+
 public class SoundEffect : MonoBehaviour
 {
     [SerializeField] Transform posConten;
     [SerializeField] ItemSoundEffect item;
     List<ItemSoundEffect> _itemList = new List<ItemSoundEffect>();
-    MenuControl menuControl;
 
-    public void Init()
-    {
-        menuControl = GetComponent<MenuControl>();
-    }
     public void GameStart()
     {
         SpawnItem_SoundEffect();

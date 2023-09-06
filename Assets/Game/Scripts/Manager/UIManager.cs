@@ -10,13 +10,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] UI_SoundEffectChild ui_SoundEffectChild; 
     [SerializeField] UI_GamePlay ui_GamePlay; 
     [SerializeField] UI_Home ui_home; 
-    void Start()
-    {
-        
-    }
 
-    void Update()
+    public void Init()
     {
-        
+        Instance = this;
+        ui_home.Init(ui_soundEffect);
+        ui_SoundEffectChild.Init();
+        ui_soundEffect.Init();
+    }
+    public void GameStart()
+    {
+        ui_home.Show();
     }
 }

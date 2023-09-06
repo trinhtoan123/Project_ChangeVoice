@@ -1,18 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TQT.UI;
 
 public class UI_SoundEffect : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] SoundEffect soundEffect;
+    MenuControl menuControl;
 
-    // Update is called once per frame
-    void Update()
+    public void Init()
     {
-        
+        menuControl = GetComponent<MenuControl>();
+    } 
+    public void Show()
+    {
+        menuControl.PlayShow();
+        soundEffect.GameStart();
+    }
+    public void Hide()
+    {
+        menuControl.PlayHide();
     }
 }

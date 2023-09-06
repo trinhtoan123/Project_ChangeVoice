@@ -10,17 +10,25 @@ public class GameManager : MonoBehaviour
     Dictionary<string, MainSoundInfo> soundInfoDict;
     Dictionary<string, List<MainSoundInfo>> dataType = new Dictionary<string, List<MainSoundInfo>>();
     List<string> typeItem = new List<string>();
+    [SerializeField]UIManager uIManager;
     private void Awake()
     {
+        OnInit();
+    }
+    void OnInit()
+    {
         Instance = this;
+        soundInfoDict = DataVO.Instance.SoundInfo.GetRecordSoundInfo();
     }
     void Start()
     {
         GameStart();
     }
+  
     public void GameStart()
     {
-        soundInfoDict = DataVO.Instance.SoundInfo.GetRecordSoundInfo();
+        uIManager.Init();
+        uIManager.GameStart();
     }
     public void GameEnd()
     {
@@ -53,7 +61,7 @@ public class GameManager : MonoBehaviour
     }
     public MainSoundInfo SoundInfoDict(int index)
     {
-        return dataType[typeItem[index]][index];
+        return dataType[typeItem[index]].FirstOrDefault();
     }
 }
    

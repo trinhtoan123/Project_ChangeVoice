@@ -1,13 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
+using System;
 
 namespace TQT.UI
 {
     public class MenuControl : MonoBehaviour
     {
-        public List<ItemActive> _item = new List<ItemActive>();
+        #region Properties
+        [SerializeField]
+        private bool isShow = false,
+            unScaleTime = false;
+        [SerializeField]
+        private DataItem[] items = null;
+
+        private bool isPlay;
+
+        public bool IsShow => isShow;
+        public bool IsPlay => isPlay;
+        #endregion Properties
         // Start is called before the first frame update
         void Start()
         {
@@ -19,27 +30,89 @@ namespace TQT.UI
         {
 
         }
-        public void GetItem()
+        private void OnValidate()
         {
-            _item.Add(GetComponentInChildren<ItemActive>());
+            if (isShow)
+                SetShow();
+            else
+                SetHide();
         }
-        //public void OnDrawGizmosSelected()
-        //{
-        //    GetItem();
-        //}
-        public void Show()
+
+        public void SetShow()
         {
-            for (int i = 0; i < _item.Count; i++)
-            {
-                _item[i].gameObject.SetActive(true);
-            }
+            isShow = true;
+            isPlay = false;
+            StopAllCoroutines();
+            for (int i = 0; items != null && i < items.Length; i++)
+                if (items[i] != null)
+                    items[i].SetShow();
         }
-        public void Hide()
+        public void SetHide()
         {
-            for (int i = 0; i < _item.Count; i++)
+            isShow = false;
+            isPlay = false;
+            StopAllCoroutines();
+            for (int i = 0; items != null && i < items.Length; i++)
+                if (items[i] != null)
+                    items[i].SetHide();
+        }
+
+        public void PlayShow(float delay = 0, Action onComplete = null)
+        {
+            if (IsShow)
+                return;
+            StopAllCoroutines();
+            StartCoroutine(IE_Play(true, delay, onComplete));
+        }
+
+        public void PlayHide(float delay = 0, Action onComplete = null)
+        {
+            if (!IsShow)
+                return;
+            StopAllCoroutines();
+            StartCoroutine(IE_Play(false, delay, onComplete));
+        }
+
+
+        private IEnumerator IE_Play(bool state, float delay = 0, Action onComplete = null)
+        {
+            isShow = state;
+            isPlay = true;
+            //
+            if (delay > 0)
             {
-                _item[i].gameObject.SetActive(false);
+                if (unScaleTime)
+                    yield return new WaitForSecondsRealtime(delay);
+                else
+                    yield return new WaitForSeconds(delay);
             }
+            //
+            for (int i = 0; items != null && i < items.Length; i++)
+            {
+                if (state)
+                    items[i].PlayShow(unScaleTime);
+                else
+                    items[i].PlayHide(unScaleTime);
+            }
+            //
+            while (true)
+            {
+                bool isBreak = true;
+                for (int i = 0; items != null && i < items.Length; i++)
+                {
+                    if (items[i].IsPlay)
+                    {
+                        isBreak = false;
+                        break;
+                    }
+                }
+                if (isBreak)
+                    break;
+                yield return new WaitForEndOfFrame();
+            }
+            //
+            isPlay = false;
+            onComplete?.Invoke();
         }
     }
 

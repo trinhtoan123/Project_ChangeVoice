@@ -26,4 +26,9 @@ public class ItemSoundEffect : MonoBehaviour
     {
         Observer.Instance.Notify("Button_Sound", id);
     }
+    public void Onclick_Item()
+    {
+
+    }
 }
+ 
